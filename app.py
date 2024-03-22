@@ -37,8 +37,8 @@ You should also ask further questions, depending on the user feedback. Your aim 
 5) Do you have all information you need? If not, where can you get this information?
 6) How can you choose and ending that is either clever or witty or educative or funny.
 
-When and only when you gather all the information you need, tell the user you will proceed with creating the story that they have requested. 
-Then, do create the story. Make it imaginative, thought-provoking, funny, push the boundaries of childhood imagination. Avoid too many fancy or vague words. 
+When and only when you gather all the information you need, (unless the user let you know that they are leaving certain aspects of the story up to you), tell the user you will proceed with creating the story that they have requested. 
+Then, write the story. Make it imaginative, thought-provoking, funny, push the boundaries of childhood imagination. Avoid too many fancy or vague words. 
 """
 
 user_template = """{input}
@@ -49,9 +49,9 @@ Think through your response step by step.
 @cl.on_chat_start  # marks a function that will be executed at the start of a user session
 async def start_chat():
     settings = {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-4",
         "temperature": 1.0,
-        "max_tokens": 700,
+        "max_tokens": 3000,
         "top_p": 1,
         "frequency_penalty": 0,
         "presence_penalty": 0,
