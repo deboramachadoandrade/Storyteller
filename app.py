@@ -28,7 +28,7 @@ os.environ["OPENAI_API_KEY"] = openai.api_key
 from langchain_community.document_loaders import PyMuPDFLoader
 
 loader = PyMuPDFLoader(
-    "EU_regulation.pdf",
+    "data/Tratado_Descritivo_Brasil_1587.pdf",
 )
 
 documents = loader.load()
