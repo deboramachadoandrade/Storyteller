@@ -49,7 +49,7 @@ Think through your response step by step.
 @cl.on_chat_start  # marks a function that will be executed at the start of a user session
 async def start_chat():
     settings = {
-        "model": "gpt-4",
+        "model": "gpt-3.5-turbo",
         "temperature": 1.0,
         "max_tokens": 700,
         "top_p": 1,
