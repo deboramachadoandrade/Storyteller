@@ -79,7 +79,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-primary_qa_llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+primary_qa_llm = ChatOpenAI(model_name="gpt-4", temperature=0)
 
 retrieval_augmented_qa_chain = (
     # INVOKE CHAIN WITH: {"question" : "<<SOME USER QUESTION>>"}
