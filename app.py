@@ -50,7 +50,7 @@ Think through your response step by step.
 async def start_chat():
     settings = {
         "model": "gpt-4",
-        "temperature": 1.3,
+        "temperature": 1.0,
         "max_tokens": 700,
         "top_p": 1,
         "frequency_penalty": 0,
