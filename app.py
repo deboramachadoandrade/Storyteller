@@ -1,126 +1,57 @@
-# Final project: Nólë 
-#by Débora Machado Andrade
+# You can find this code for Chainlit python streaming here (https://docs.chainlit.io/concepts/streaming/python)
 
-#Nólë means "knowledge" in Quenya, a fictional Elvish language created by J.R.R.Tolkien 
-
-#In the following notebook we'll build RAG and agentic pipelines that will allow us to interactively 
-#retrieve information from our knowledge sources, as well as construct the building blocks of a narrative 
-#story-telling book for children, where the chosen knowledge will be embedded. 
+# OpenAI Chat completion
 
 import os
-import openai
 from openai import AsyncOpenAI  # importing openai for API usage
 import chainlit as cl  # importing chainlit for our app
-#from chainlit.prompt import Prompt, PromptMessage  # importing prompt tools
-from chainlit.prompt import Prompt, PromptMessage 
+from chainlit.prompt import Prompt, PromptMessage  # importing prompt tools
 from chainlit.playground.providers import ChatOpenAI  # importing ChatOpenAI tools
+from dotenv import load_dotenv
 
+load_dotenv()
 
+# ChatOpenAI Templates
+system_template = """You are a helpful children's book writer assistant. You will produce short stories for children, like children's books narratives. 
+You might be requested to generate images for the book as well. The user might be an educator, a parent, or even a child. 
+Tune your responses to the vocabulary and level of understanding of the user you are interacting with. 
+Whoever the user might be, the final product, which is a short story and images, is always focused on children, specifically children aged 5-8 years old. 
 
-from getpass import getpass
+In order to write the story, you will first have a conversation with the user to understand what they are interested in writing. 
+You will ask the following questions, only one at a time, in a conversational fashion:
 
-openai.api_key = getpass("Please provide your OpenAI Key: ")
-os.environ["OPENAI_API_KEY"] = openai.api_key
+1)  Could you tell me a brief summary of the story you want to write?
+2) Would you like this story to be embedded or blended in a specific educational topic like a historical event, scientific themes, arts, geography, etc? If yes, please elaborate on that and if possible, provide references.
+3) Do you have specific characters in mind? 
+4) What would be place and time of our story?
+5) Do you have a particular ending in mind?
+6) In which language should the story be written? Would you like more than one language to be present in the story? 
 
+If requested to generate a story that should have a historical event embedded in the background, you should request references in the form of pdf documents or links. 
+You should also ask further questions, depending on the user feedback. Your aim is to end up with a clear idea of the following:
 
+1) Main message the story should convey
+2) All main characters, their personalities, their physical appearance (if applicable), their personal story (if applicable)
+3) Where and when the story happens
+4) Why this story is interesting. What can you do to make it even more interesting.
+5) Do you have all information you need? If not, where can you get this information?
+6) How can you choose and ending that is either clever or witty or educative or funny.
 
-#Loading data
-from langchain_community.document_loaders import PyMuPDFLoader
-
-loader = PyMuPDFLoader(
-    "data/Tratado_Descritivo_Brasil_1587.pdf",
-)
-
-documents = loader.load()
-
-#Splitting data
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 1000,
-    chunk_overlap = 100
-)
-
-documents = text_splitter.split_documents(documents)
-
-#Loading OpenAI embeddings model:
-from langchain_openai import OpenAIEmbeddings
-
-embeddings = OpenAIEmbeddings(
-    model="text-embedding-3-small"
-)
-
-#Creating a FAISS VectorStore:
-from langchain_community.vectorstores import FAISS
-
-vector_store = FAISS.from_documents(documents, embeddings)
-
-#Creating a retriever:
-retriever = vector_store.as_retriever()
-
-#Creating a prompt template:
-from langchain.prompts import ChatPromptTemplate
-
-template = """Answer the question based only on the following context. If you cannot answer the question with the context, please respond with 'I don't know':
-
-Context:
-{context}
-
-Question:
-{question}
+When and only when you gather all the information you need, tell the user you will proceed with creating the story that they have requested. 
+Then, do create the story. Make it imaginative, thought-provoking, funny, push the boundaries of childhood imagination. Avoid too many fancy or vague words. 
 """
 
-prompt = ChatPromptTemplate.from_template(template)
-
-#Creating a RAG chain:
-from operator import itemgetter
-
-from langchain_openai import ChatOpenAI
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
-
-primary_qa_llm = ChatOpenAI(model_name="gpt-4", temperature=0)
-
-retrieval_augmented_qa_chain = (
-    # INVOKE CHAIN WITH: {"question" : "<<SOME USER QUESTION>>"}
-    # "question" : populated by getting the value of the "question" key
-    # "context"  : populated by getting the value of the "question" key and chaining it into the base_retriever
-    {"context": itemgetter("question") | retriever, "question": itemgetter("question")}
-    # "context"  : is assigned to a RunnablePassthrough object (will not be called or considered in the next step)
-    #              by getting the value of the "context" key from the previous step
-    | RunnablePassthrough.assign(context=itemgetter("context"))
-    # "response" : the "context" and "question" values are used to format our prompt object and then piped
-    #              into the LLM and stored in a key called "response"
-    # "context"  : populated by getting the value of the "context" key from the previous step
-    | {"response": prompt | primary_qa_llm, "context": itemgetter("context")}
-)
-
-#We will be using the advanced Multiquery retriever provided by Langchain:
-from langchain.retrievers import MultiQueryRetriever
-advanced_retriever = MultiQueryRetriever.from_llm(retriever=retriever, llm=primary_qa_llm)
-
-#We create a chain to stuff our documents into our prompt:
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain import hub
-
-retrieval_qa_prompt = hub.pull("langchain-ai/retrieval-qa-chat")
-document_chain = create_stuff_documents_chain(primary_qa_llm, retrieval_qa_prompt)
-
-#Create the new retrieval chain with advanced retriever:
-from langchain.chains import create_retrieval_chain
-retrieval_chain = create_retrieval_chain(advanced_retriever, document_chain)
-
-#And we create our chatbot functions:
 user_template = """{input}
 Think through your response step by step.
 """
+
+
 @cl.on_chat_start  # marks a function that will be executed at the start of a user session
 async def start_chat():
     settings = {
-        "model": "gpt-3.5-turbo",
-        #"model": "gpt-4",
-        "temperature": 1.0,
-        "max_tokens": 500,
+        "model": "gpt-4",
+        "temperature": 1.3,
+        "max_tokens": 700,
         "top_p": 1,
         "frequency_penalty": 0,
         "presence_penalty": 0,
@@ -136,16 +67,16 @@ async def main(message: cl.Message):
     client = AsyncOpenAI(
     api_key=os.environ.get("OPENAI_API_KEY"),
 )
+
     print(message.content)
 
     prompt = Prompt(
-        #provider=ChatOpenAI.id,
-        provider="ChatOpenAI",
+        provider=ChatOpenAI.id,
         messages=[
             PromptMessage(
                 role="system",
-                template=template,
-                formatted=template,
+                template=system_template,
+                formatted=system_template,
             ),
             PromptMessage(
                 role="user",
@@ -162,29 +93,17 @@ async def main(message: cl.Message):
     msg = cl.Message(content="")
 
     # Call OpenAI
-    #async for stream_resp in await client.chat.completions.create(
-    #    messages=[m.to_openai() for m in prompt.messages], stream=True, **settings
-    #):
-        
-    #    token = stream_resp.choices[0].delta.content
-    #    if not token:
-    #        token = ""
-    #    await msg.stream_token(token)
+    async for stream_resp in await client.chat.completions.create(
+        messages=[m.to_openai() for m in prompt.messages], stream=True, **settings
+    ):
+        token = stream_resp.choices[0].delta.content
+        if not token:
+            token = ""
+        await msg.stream_token(token)
 
     # Update the prompt object with the completion
-    result = retrieval_chain.invoke({"input":message.content})
-    msg.content = result["answer"]
-    #print(temp)
-    #prompt.completion = msg.content
-    #prompt.completion = temp
-    #msg.content = temp
-    
-
-    #prompt.completion = completion
+    prompt.completion = msg.content
     msg.prompt = prompt
 
     # Send and close the message stream
     await msg.send()
-    
-     
-
