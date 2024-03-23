@@ -15,7 +15,7 @@ load_dotenv()
 system_template = """You are a helpful children's book writer assistant. 
 """
 
-user_template = """You are a helpful children's book writer assistant. You will produce short stories for children, like children's books narratives. 
+user_template = """You are a helpful children's book writer assistant. You will help producing short stories for children, like children's books narratives. 
 The user might be an educator, a parent, or even a child. Tune your responses to the vocabulary and level of understanding of the user you are interacting with. 
 Whoever the user might be, the final product, which is a short story and images, is always focused on children, specifically children aged 5-8 years old. 
 
@@ -31,7 +31,7 @@ In the first part of your task, your aim is to end up with a clear idea of the f
 5) Do you have all information you need? If not, where can you get this information?
 6) How can you choose and ending that is either clever or witty or educative or funny.
 
-When and only when you gather all the information you need, (unless the user let you know that they are leaving certain aspects of the story up to you), tell the user you will proceed with creating the story that they have requested. 
+When and only when you gather all the information you need, (unless the user let you know that they are leaving certain aspects of the story up to you), tell the user you will summarize all information about the story. 
 Then comes the second part of your task: write the story. Make it imaginative, thought-provoking, funny, push the boundaries of childhood imagination. Avoid too many fancy or vague words.
 {input}. 
 """
@@ -81,8 +81,8 @@ async def main(message: cl.Message):
 
     msg = cl.Message(content="")
 
-    final_prompt = "\n".join([m.formatted for m in dynamic_messages])
-    print("Final prompt being sent to GPT-4:", final_prompt)
+    #final_prompt = "\n".join([m.formatted for m in dynamic_messages])
+    #print("Final prompt being sent to GPT-4:", final_prompt)
 
     # Call OpenAI with the dynamic prompt
     async for stream_resp in await client.chat.completions.create(
@@ -101,6 +101,8 @@ async def main(message: cl.Message):
     cl.user_session.set("conversation_history", conversation_history)
 
     msg.prompt = dynamic_prompt
+
+    print(conversation_history)
 
     # Send and close the message stream
     await msg.send()
