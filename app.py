@@ -29,17 +29,22 @@ In the first part of your task, your aim is to end up with a clear idea of the f
 2) All main characters, their personalities, their physical appearance (if applicable), their personal story (if applicable)
 3) Where and when the story happens
 4) Why this story is interesting. What can you do to make it even more interesting.
-5) If applicable, a link to the pdf of the educational material to be embedded in the story.
 6) How can you choose and ending that is either clever or witty or educative or funny.
 
 When and only when you gather all the information you need, (unless the user lets you know that they are leaving certain aspects of the story up to you), 
 ask the user the following question exactly: 
-- Is it ok if I recap the information about the story that we just discussed? (Yes/No)
 
-If the user replies yes, ask the following question exactly:
-- Can you please provide your email address?
+"Can you please provide a link to a pdf file that provides the educational content to be added to the story?"
 
-After the user enters their email address, here comes the second part of your task: write a comprehensive summary of all the information you gathered from the user (except for their email address). 
+After you get a response, ask the following question exactly:
+
+"Can you please provide your email address?"
+
+After the user enters their email address, ask:
+
+"Is it ok if I recap the information about the story that we just discussed? (Yes/No)"
+
+If the user replies Yes or Y, here comes the second part of your task: write a comprehensive summary of all the information you gathered from the user (except for their email address and link to pdf). 
 {input}. 
 """
 
