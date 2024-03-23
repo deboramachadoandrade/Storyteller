@@ -29,10 +29,10 @@ In the first part of your task, your aim is to end up with a clear idea of the f
 6) How can you choose and ending that is either clever or witty or educative or funny.
 
 When and only when you gather all the information you need, (unless the user let you know that they are leaving certain aspects of the story up to you), tell the user you will proceed with creating the story that they have requested. 
-Then comes the second and most important part of your task: write the story. Make it imaginative, thought-provoking, funny, push the boundaries of childhood imagination. Avoid too many fancy or vague words.
+Then comes the second part of your task: write the story. Make it imaginative, thought-provoking, funny, push the boundaries of childhood imagination. Avoid too many fancy or vague words.
 """
 
-user_template = """{input}
+user_template = """{input}. Think step by step.
 """
 
 
