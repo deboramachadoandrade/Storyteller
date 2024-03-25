@@ -1,25 +1,39 @@
 # story_generator.py
 
+import os
+import openai
 from openai import OpenAI
+from getpass import getpass
 
-client = OpenAI()
+openai.api_key = getpass("Please provide your OpenAI Key: ")
+os.environ["OPENAI_API_KEY"] = openai.api_key
+
+client = OpenAI() 
 
 def generate_story_from_info(user_info):
     # Construct a prompt from the gathered information
     
     prompt = f"Now, based on the collected information: {user_info}. Let's start writing the story..."
 
-    response = client.completions.create(model="gpt-4",  
-    prompt=prompt,
-    temperature=1.0,
-    max_tokens=1500,
-    top_p=1.0,
-    frequency_penalty=0.0,
-    presence_penalty=0.0,
-    stop=[" Human:", " AI:"]  # Adjust based on your prompt/story structure)
+    response = client.chat.completions.create( 
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Please create a story based on the following information: {user_info}. Let's start writing the story..."},
+        ]
+        prompt=prompt,
+        temperature=1.0,
+        max_tokens=1500,
+        top_p=1.0,
+        frequency_penalty=0.0,
+        presence_penalty=0.0,
+    )
 
+    print(response.choices[0].message['content'])
+
+    
     # The response includes several pieces; the 'choices' list contains the generated texts
-    story = response.choices[0].text.strip()
+    story = response.choices[0].message['content']
     return story
 
 # Example usage
