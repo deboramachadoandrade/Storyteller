@@ -9,6 +9,9 @@ from chainlit.prompt import Prompt, PromptMessage  # importing prompt tools
 from chainlit.playground.providers import ChatOpenAI  # importing ChatOpenAI tools
 from dotenv import load_dotenv
 
+
+
+
 load_dotenv()
 
 # ChatOpenAI Templates
@@ -40,11 +43,7 @@ After you get a response, ask the following question exactly:
 
 "Can you please provide your email address?"
 
-After the user enters their email address, ask:
-
-"Is it ok if I recap the information about the story that we just discussed? (Yes/No)"
-
-If the user replies Yes or Y, here comes the second part of your task: write a comprehensive summary of all the information you gathered from the user (except for their email address and link to pdf). 
+After the user enters their email address, comes the second part of your task, which is very important: write a comprehensive summary of all the information you gathered from the user (except for their email address and link to pdf). 
 {input}. 
 """
 
@@ -55,7 +54,7 @@ async def start_chat():
     settings = {
         "model": "gpt-4",
         "temperature": 1.0,
-        "max_tokens": 3000,
+        "max_tokens": 1500,
         "top_p": 1,
         "frequency_penalty": 0,
         "presence_penalty": 0,
