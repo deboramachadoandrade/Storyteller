@@ -5,8 +5,8 @@ import openai
 from openai import OpenAI
 from getpass import getpass
 
-openai.api_key = getpass("Please provide your OpenAI Key: ")
-os.environ["OPENAI_API_KEY"] = openai.api_key
+#openai.api_key = getpass("Please provide your OpenAI Key: ")
+#os.environ["OPENAI_API_KEY"] = openai.api_key
 
 client = OpenAI() 
 

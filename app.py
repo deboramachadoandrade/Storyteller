@@ -114,7 +114,12 @@ async def main(message: cl.Message):
 
     msg.prompt = dynamic_prompt
 
-    print(conversation_history)
+    if check_for_email(msg.content):
+    
+        user_info_json = generate_user_info_json(conversation_history) 
+        story = generate_story_from_info(user_info_json)
+   
+    print(user_info_json)
 
     # Send and close the message stream
     await msg.send()
