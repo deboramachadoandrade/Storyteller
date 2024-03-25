@@ -7,6 +7,7 @@ from openai import AsyncOpenAI  # importing openai for API usage
 import chainlit as cl  # importing chainlit for our app
 from chainlit.prompt import Prompt, PromptMessage  # importing prompt tools
 from chainlit.playground.providers import ChatOpenAI  # importing ChatOpenAI tools
+from story_generator import generate_story_from_info, generate_user_info_json, check_for_email
 from dotenv import load_dotenv
 
 
