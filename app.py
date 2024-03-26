@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 
 
+
 load_dotenv()
 
 # ChatOpenAI Templates
@@ -21,7 +22,7 @@ system_template = """You are a helpful children's book writer assistant.
 
 user_template = """You are a helpful children's book writer assistant. You will help producing short stories for children, like children's books narratives. 
 The user might be an educator or a parent. 
-Whoever the user might be, the final product, which is a short story, is always focused on children aged 5-8 years old. 
+Whoever the user might be, the final product, which is a short story, is always focused on children aged 6-9 years old. 
 
 In order to write the story, you will first have a conversation with the user to understand what they are interested in writing. 
 If requested to generate a story that should have an educational topic embedded in the background, you should request references in the form of pdf documents or links. 
@@ -93,8 +94,7 @@ async def main(message: cl.Message):
 
     msg = cl.Message(content="")
 
-    #final_prompt = "\n".join([m.formatted for m in dynamic_messages])
-    #print("Final prompt being sent to GPT-4:", final_prompt)
+
 
     # Call OpenAI with the dynamic prompt
     async for stream_resp in await client.chat.completions.create(
@@ -112,14 +112,17 @@ async def main(message: cl.Message):
     # Save the updated conversation history back to the session
     cl.user_session.set("conversation_history", conversation_history)
 
-    msg.prompt = dynamic_prompt
+    print(message.content)
+    if check_for_email(message.content):
+    #triggers the generation of the story
+        user_info_json = await generate_user_info_json(client, conversation_history) 
+        print(user_info_json)
+        story = await generate_story_from_info(client, user_info_json)
+        print(story)
+        msg = story
 
-    if check_for_email(msg.content):
-    
-        user_info_json = generate_user_info_json(conversation_history) 
-        story = generate_story_from_info(user_info_json)
-   
-    print(user_info_json)
+    msg.prompt = dynamic_prompt
+    #print(msg.content)
 
     # Send and close the message stream
     await msg.send()
