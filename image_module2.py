@@ -12,7 +12,7 @@ async def download_image(session, url, filename):
         else:
             print(f"Failed to download image from {url}. Status: {response.status}")
 
-async def generate_image(client, paragraph):
+async def generate_image(client, paragraph, characters_appearance):
     #generates an image given a prompt and a client
 
     import asyncio
@@ -26,7 +26,7 @@ async def generate_image(client, paragraph):
 
     client = AsyncOpenAI()  # Async client for OpenAI
 
-    prompt = ("Subject: " + paragraph + " Style: van Gogh -like. The images should not contain any letters or numbers.")
+    prompt = ("Subject: " + paragraph + " Description of characters: (only include characters cited in Subject): " + characters_appearance + ". Style: van Gogh -like. The images should not contain any letters or numbers.")
 
     image_params = {
         "model": "dall-e-3",

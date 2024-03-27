@@ -13,7 +13,9 @@ from image_prompt_module import process_text_for_image_prompts
 from image_module2 import generate_image, download_image
 import json
 from dotenv import load_dotenv
+from docx import Document
 
+document = Document()
 
 
 
@@ -131,6 +133,8 @@ async def main(message: cl.Message):
         user_info = json.loads(user_info_json)
         pdf = user_info["pdf"]
         search_topic = user_info["search_topic"]
+        document.add_heading(search_topic, level=1)
+        
         information = await RAG_search(pdf, search_topic)
 
         #The story is generated based on the user requests and the information retrieved from the pdf:
