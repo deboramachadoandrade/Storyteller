@@ -133,20 +133,22 @@ async def main(message: cl.Message):
         user_info = json.loads(user_info_json)
         pdf = user_info["pdf"]
         search_topic = user_info["search_topic"]
-        document.add_heading(search_topic, level=1)
-        
+        characters_appearance = user_info["characters_physical_appearance"]
+
         information = await RAG_search(pdf, search_topic)
 
-        #The story is generated based on the user requests and the information retrieved from the pdf:
+        #The story is generated based on the user requests and the information retrieved from the pdf, then saved in a docx file:
         story = await generate_story_from_info(client, user_info, information)
-        print(story)
+        document.add_paragraph(story)
+        document.save('story.docx')
+        
 
         #The story is split into paragraphs and those are processed for image prompting:
         rewritten_paragraphs = await process_text_for_image_prompts(client, story)
 
-        #For each image prompt, we generate an image and save in the local directory: 
+        #For each image prompt (which means for each paragraph), we generate an image and save it in the local directory: 
         for paragraph in rewritten_paragraphs:
-            await generate_image(client, paragraph)
+            await generate_image(client, paragraph, characters_appearance)
         
         
         
