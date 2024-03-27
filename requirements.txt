@@ -8,7 +8,9 @@ langchain-openai
 langchain_core 
 langchain-community 
 langchainhub 
-ragas
 faiss_cpu
 pymupdf 
-pandas
+python-docx
+--upgrade openai
+pillow
+httpx aiofiles

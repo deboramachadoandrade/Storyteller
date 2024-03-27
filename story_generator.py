@@ -9,12 +9,9 @@ from getpass import getpass
 #client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 
-async def generate_story_from_info(client, user_info_json):
-    #generates a story from the user_input json:
+async def generate_story_from_info(client, user_info, information):
+    #generates a story from the user_input dictionary:
     
-    # Convert user_info_json from string to dictionary
-    import json
-    user_info = json.loads(user_info_json)
     
     formatted_info = ", ".join([f"{key}: {value}" for key, value in user_info.items()])
     
@@ -22,7 +19,7 @@ async def generate_story_from_info(client, user_info_json):
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"Please create a story based on the following information: {formatted_info}. Ignore the keys pdf, email and physical_appearance. Your audience comprises 7-10 year-old children, so please avoid fancy words and try to make the story interesting for your audience specifically. Your audience can understand all languages used in the story already, no need to translate any word. Let's start writing the story..."},
+            {"role": "user", "content": f"Please create a story for 7-10 year-old children that incorporates the following knowledge: {information} into the following story plan: {formatted_info}. Ignore the keys pdf and email. Please avoid fancy words and try to make the narrative interesting for your audience specifically. Assume your audience can understand all languages used in the story. Let's start writing the story..."},
         ],
         temperature=1.1,
         max_tokens=1500,
@@ -71,7 +68,7 @@ async def generate_user_info_json(client, conversation_history):
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"{conversation_history}. - Summarize the main characteristics of the intended story as discussed in the previous conversation. Your output must be a json that incorporates the following as keys: plot, characters_description, characters_physical_appearance, setting, educational_topic, language, pdf, email, special_observations"},
+            {"role": "user", "content": f"{conversation_history}. - Summarize the main characteristics of the intended story as discussed in the previous conversation. Your output must be a json that incorporates the following as keys: plot, characters_description, characters_physical_appearance, setting, educational_topic, search_topic, language, pdf, email, special_observations. The search_topic can be seen as the essence of educational_topic, exactly what the search assistant will search to bring specialized information to the writer who will write the story. Examples of search_topic: influence of the Norman conquest on the English language, quantum mechanics, origin of vulcanos, invention of agriculture, prime numbers, history of first Portuguese settlements in Northeastern Brazil, etc etc. The search_topic should have only one entry. Pay special attention to the plot and make sure to include requests made by the user or your own observations in the key special_observations"},
         ],
         temperature=0.1,
         max_tokens=1500,
