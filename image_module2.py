@@ -26,7 +26,7 @@ async def generate_image(client, paragraph, characters_appearance):
 
     client = AsyncOpenAI()  # Async client for OpenAI
 
-    prompt = ("Subject: " + paragraph + " Description of characters: (only include characters cited in Subject): " + characters_appearance + ". Style: van Gogh -like. The images should not contain any letters or numbers.")
+    prompt = ("Subject: " + paragraph + " Description of characters: (you should only look up characters cited in Subject): " + str(characters_appearance) + ". Style: van Gogh -like. The images should not contain any letters or numbers.")
 
     image_params = {
         "model": "dall-e-3",

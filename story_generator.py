@@ -19,7 +19,7 @@ async def generate_story_from_info(client, user_info, information):
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"Please create a story for 7-10 year-old children that incorporates the following knowledge: {information} into the following story plan: {formatted_info}. Ignore the keys pdf and email. Please avoid fancy words and try to make the narrative interesting for your audience specifically. Assume your audience can understand all languages used in the story. Let's start writing the story..."},
+            {"role": "user", "content": f"Please create a story for 7-10 year-old children that incorporates the following knowledge: {information} into the following story plan: {formatted_info}. Ignore the keys pdf and email. Please avoid fancy words and try to make the narrative interesting for your audience specifically. Assume your audience can understand all languages used in the story. Don't forget to add a title at the beginning of the story. Let's start writing the story..."},
         ],
         temperature=1.1,
         max_tokens=1500,

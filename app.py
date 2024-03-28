@@ -1,6 +1,10 @@
-# You can find this code for Chainlit python streaming here (https://docs.chainlit.io/concepts/streaming/python)
+# Final project: Nólë 
+#by Débora Machado Andrade, 27.03.2024
 
-# OpenAI Chat completion
+
+#(Nólë means "knowledge" in Quenya, a fictional Elvish language created by J.R.R.Tolkien)
+
+
 
 import os
 from openai import AsyncOpenAI  # importing openai for API usage
