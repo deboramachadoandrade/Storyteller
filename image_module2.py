@@ -12,7 +12,8 @@ async def download_image(session, url, filename):
         else:
             print(f"Failed to download image from {url}. Status: {response.status}")
 
-async def generate_image(client, paragraph, characters_appearance):
+
+async def generate_image(client, paragraph, characters_appearance, story):
     #generates an image given a prompt and a client
 
     import asyncio
@@ -26,7 +27,10 @@ async def generate_image(client, paragraph, characters_appearance):
 
     client = AsyncOpenAI()  # Async client for OpenAI
 
-    prompt = ("Subject: " + paragraph + " Description of characters: (you should only look up characters cited in Subject): " + str(characters_appearance) + ". Style: van Gogh -like. The images should not contain any letters or numbers.")
+    prompt = ("Subject: " + paragraph + ". Description of characters: (you should only look up characters cited in Subject): " 
+              + str(characters_appearance) 
+              + ". If it is not clear which characters are being referred to in the Subject, put the Subject in the context of the whole story to figure that out. The story is the following: " 
+              + story + " Style: Picasso -like. The images should not contain any letters or numbers.")
 
     image_params = {
         "model": "dall-e-3",
@@ -55,9 +59,12 @@ async def generate_image(client, paragraph, characters_appearance):
                     # Assuming URL fallback which is not in the original code but added for completeness
                     url = images_response.data[i].url
                     tasks.append(download_image(session, url, filename))
+                    image = download_image(session, url, filename)
             await asyncio.gather(*tasks)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+
+    return filename
 
 # Run the async main
 #if __name__ == "__main__":

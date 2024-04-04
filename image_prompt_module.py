@@ -35,10 +35,10 @@ async def process_text_for_image_prompts(client, text):
                  
             except Exception as e:
                 print(f"An error occurred while processing paragraph: {e}")
-                # Optionally, append the original paragraph or a placeholder
+                # In which case, append the original paragraph:
                 rewritten_paragraphs.append(paragraph)
     
-    return rewritten_paragraphs
+    return rewritten_paragraphs, paragraphs
 
 #async def main():
 #    original_text = """Once upon a time there lived a family by the name of Hoskin. They were nobles of a lower rank, settled in a picturesque corner of medieval England, peacefully spending their days in modest grandeur. The intellectual patriarch, James, a short but handsome brunet ruled with a loving hand; Catherine, his beautiful wife, embodied the graceful spirit of art. Their children, Mary, an impulsive red-haired maiden, Ann, a friendly, short, blond who loves art, and the youngest, William - a brunet like his father who was outgoing, inquisitive and clever as a fox. 

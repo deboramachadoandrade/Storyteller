@@ -18,6 +18,7 @@ from image_module2 import generate_image, download_image
 import json
 from dotenv import load_dotenv
 from docx import Document
+from docx.shared import Inches
 
 document = Document()
 
@@ -124,7 +125,6 @@ async def main(message: cl.Message):
     # Save the updated conversation history back to the session
     cl.user_session.set("conversation_history", conversation_history)
 
-    print(message.content)
 
     if check_for_email(message.content):
     #triggers the generation of the story and images
@@ -143,24 +143,20 @@ async def main(message: cl.Message):
 
         #The story is generated based on the user requests and the information retrieved from the pdf, then saved in a docx file:
         story = await generate_story_from_info(client, user_info, information)
-        document.add_paragraph(story)
-        document.save('story.docx')
         
 
         #The story is split into paragraphs and those are processed for image prompting:
-        rewritten_paragraphs = await process_text_for_image_prompts(client, story)
+        rewritten_paragraphs, paragraphs = await process_text_for_image_prompts(client, story)
 
-        #For each image prompt (which means for each paragraph), we generate an image and save it in the local directory: 
-        for paragraph in rewritten_paragraphs:
-            await generate_image(client, paragraph, characters_appearance)
+        #For each image prompt (which means for each paragraph), we generate an image and save it in the local directory.
+        #In addition, we add each paragraph at a time followed by its corresponding image to our docx file:
+         
+        for i in range(len(paragraphs)):
+            filename = await generate_image(client, rewritten_paragraphs[i], characters_appearance)
+            document.add_paragraph(paragraphs[i])
+            document.add_picture(filename, width=Inches(4))
+            document.save('story.docx')
         
-        
-        
-        
-        msg = story
-
-    
-    #print(msg.content)
 
     # Send and close the message stream
     await msg.send()
