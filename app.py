@@ -152,7 +152,7 @@ async def main(message: cl.Message):
         #In addition, we add each paragraph at a time followed by its corresponding image to our docx file:
          
         for i in range(len(paragraphs)):
-            filename = await generate_image(client, rewritten_paragraphs[i], characters_appearance)
+            filename = await generate_image(client, rewritten_paragraphs[i], characters_appearance, story)
             document.add_paragraph(paragraphs[i])
             document.add_picture(filename, width=Inches(4))
             document.save('story.docx')
