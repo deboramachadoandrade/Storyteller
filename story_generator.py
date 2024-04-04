@@ -36,6 +36,29 @@ async def generate_story_from_info(client, user_info, information):
     
     return story
 
+async def generate_summary_from_story(client, story):
+    #generates a story from the user_input dictionary:
+    
+    
+    response = await client.chat.completions.create( 
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Summarize the following story: " + story},
+        ],
+        temperature=1.1,
+        max_tokens=500,
+        top_p=1.0,
+        frequency_penalty=0.0,
+        presence_penalty=0.0,
+    )
+
+    
+    # The response includes several pieces; the 'choices' list contains the generated texts
+    summary = response.choices[0].message.content
+    
+    return summary
+
 # Example usage
 
 

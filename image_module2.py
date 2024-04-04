@@ -13,7 +13,7 @@ async def download_image(session, url, filename):
             print(f"Failed to download image from {url}. Status: {response.status}")
 
 
-async def generate_image(client, paragraph, characters_appearance, story):
+async def generate_image(client, paragraph, characters_appearance, summary):
     #generates an image given a prompt and a client
 
     import asyncio
