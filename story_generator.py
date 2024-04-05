@@ -44,7 +44,7 @@ async def generate_summary_from_story(client, story):
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Summarize the following story: " + story},
+            {"role": "user", "content": "Summarize the following story in one sentence: " + story},
         ],
         temperature=1.1,
         max_tokens=500,

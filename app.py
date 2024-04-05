@@ -11,7 +11,7 @@ from openai import AsyncOpenAI  # importing openai for API usage
 import chainlit as cl  # importing chainlit for our app
 from chainlit.prompt import Prompt, PromptMessage  # importing prompt tools
 from chainlit.playground.providers import ChatOpenAI  # importing ChatOpenAI tools
-from story_generator import generate_story_from_info, generate_user_info_json, check_for_email
+from story_generator import generate_story_from_info, generate_user_info_json, check_for_email, generate_summary_from_story
 from rag_search_module import RAG_search
 from image_prompt_module import process_text_for_image_prompts
 from image_module2 import generate_image, download_image
@@ -143,8 +143,8 @@ async def main(message: cl.Message):
 
         #The story is generated based on the user requests and the information retrieved from the pdf, then saved in a docx file:
         story = await generate_story_from_info(client, user_info, information)
-        
-
+        summary = await generate_summary_from_story(client, story)
+        print(summary)
         #The story is split into paragraphs and those are processed for image prompting:
         rewritten_paragraphs, paragraphs = await process_text_for_image_prompts(client, story)
 
@@ -152,7 +152,7 @@ async def main(message: cl.Message):
         #In addition, we add each paragraph at a time followed by its corresponding image to our docx file:
          
         for i in range(len(paragraphs)):
-            filename = await generate_image(client, rewritten_paragraphs[i], characters_appearance, story)
+            filename = await generate_image(client, rewritten_paragraphs[i], characters_appearance)
             document.add_paragraph(paragraphs[i])
             document.add_picture(filename, width=Inches(4))
             document.save('story.docx')
