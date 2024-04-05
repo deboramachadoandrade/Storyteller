@@ -52,6 +52,7 @@ async def generate_image(client, paragraph, characters_appearance, summary):
             tasks = []
             for i, data in enumerate(image_data_list):
                 filename = f"{img_filename}_{i}.png"
+                print(filename)
                 if data:  # Assuming `data` is base64 encoded image data
                     Image.open(BytesIO(base64.b64decode(data))).save(filename)
                     print(f"{filename} was saved")

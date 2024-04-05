@@ -40,16 +40,24 @@ async def process_text_for_image_prompts(client, text):
     
     return rewritten_paragraphs, paragraphs
 
-#async def main():
-#    original_text = """Once upon a time there lived a family by the name of Hoskin. They were nobles of a lower rank, settled in a picturesque corner of medieval England, peacefully spending their days in modest grandeur. The intellectual patriarch, James, a short but handsome brunet ruled with a loving hand; Catherine, his beautiful wife, embodied the graceful spirit of art. Their children, Mary, an impulsive red-haired maiden, Ann, a friendly, short, blond who loves art, and the youngest, William - a brunet like his father who was outgoing, inquisitive and clever as a fox. 
+import os
+import asyncio
+from openai import AsyncOpenAI 
+from dotenv import load_dotenv
 
-#Their peaceful kingdom shifted under their feet when the tides of time ushered in an era that would change everything - the Norman conquest of 1066. The new rulers, the Normans, arrived with their strong traditions and strange language. They sprinkled the plain language of England with the pepper of French vocabulary - words like "jury" and "squire", filling the air with an unfamiliar melody as the new rulers tried to integrate themselves with the locals."""
 
-    rewritten_paragraphs = await process_text_for_image_prompts(client, original_text)
-    for paragraph in rewritten_paragraphs:
-        print(paragraph)
-        print("------")
+load_dotenv()
+async def main():
+    original_text = """Once upon a time there lived a family by the name of Hoskin. They were nobles of a lower rank, settled in a picturesque corner of medieval England, peacefully spending their days in modest grandeur. The intellectual patriarch, James, a short but handsome brunet ruled with a loving hand; Catherine, his beautiful wife, embodied the graceful spirit of art. Their children, Mary, an impulsive red-haired maiden, Ann, a friendly, short, blond who loves art, and the youngest, William - a brunet like his father who was outgoing, inquisitive and clever as a fox. 
+
+Their peaceful kingdom shifted under their feet when the tides of time ushered in an era that would change everything - the Norman conquest of 1066. The new rulers, the Normans, arrived with their strong traditions and strange language. They sprinkled the plain language of England with the pepper of French vocabulary - words like "jury" and "squire", filling the air with an unfamiliar melody as the new rulers tried to integrate themselves with the locals."""
+    client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+    rewritten_paragraphs, paragraphs = await process_text_for_image_prompts(client, original_text)
+    #for paragraph in rewritten_paragraphs:
+    print(paragraphs)
+    print(rewritten_paragraphs)
 
 # Run the main async function
-#if __name__ == "__main__":
-#    asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
