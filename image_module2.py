@@ -30,7 +30,7 @@ async def generate_image(client, paragraph, characters_appearance, summary):
     prompt = ("Subject: " + paragraph + ". Description of characters: (you should only look up characters cited in Subject): " 
               + str(characters_appearance) 
               + ". If it is not clear which characters are being referred to in the Subject, put the Subject in the context of the whole story to figure that out. The story is the following: " 
-              + story + " Style: Picasso -like. The images should not contain any letters or numbers.")
+              + summary + " Style: Picasso -like. The images should not contain any letters or numbers.")
 
     image_params = {
         "model": "dall-e-3",
