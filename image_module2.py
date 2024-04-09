@@ -13,7 +13,7 @@ async def download_image(session, url, filename):
             print(f"Failed to download image from {url}. Status: {response.status}")
 
 
-async def generate_image(client, paragraph, characters_appearance, summary):
+async def generate_image(client, paragraph, characters_appearance):
     #generates an image given a prompt and a client
 
     import asyncio
@@ -29,8 +29,7 @@ async def generate_image(client, paragraph, characters_appearance, summary):
 
     prompt = ("Subject: " + paragraph + ". Description of characters: (you should only look up characters cited in Subject): " 
               + str(characters_appearance) 
-              + ". If it is not clear which characters are being referred to in the Subject, put the Subject in the context of the whole story to figure that out. The story is the following: " 
-              + summary + " Style: Picasso -like. The images should not contain any letters or numbers.")
+              + " Style: Picasso -like. The images should not contain any letters or numbers.")
 
     image_params = {
         "model": "dall-e-3",
